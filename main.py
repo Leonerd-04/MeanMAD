@@ -72,7 +72,7 @@ def main() -> None:
         q1, median, q3 = quartiles(nums)
 
         print(f"\nResults: {nums}")
-        print(f"Quartiles: {q1:.3f}, {median:.2f}, {q3:.2f}")
+        print(f"Quartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
         print(f"1.5 * IQR Boundaries: {q1 - 1.5 * (q3 - q1):.2f}, {q3 + 1.5 * (q3 - q1):.2f}")
         print(f"IQR Outliers: {outliers(nums, (q1, median, q3))}")
 
