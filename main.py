@@ -26,7 +26,7 @@ def get_outliers(nums: list[float], quartiles: tuple[float, float, float]) -> li
     iqr = quartiles[2] - quartiles[0]
     boundary = quartiles[0] - 1.5 * iqr, quartiles[2] + 1.5 * iqr
 
-    for n in nums:
+    for n in list(nums):
         if n <= boundary[0] or n >= boundary[1]:
             outliers.append(n)
 
