@@ -20,15 +20,16 @@ def get_quartiles(nums: list[float]) -> tuple[float, float, float]:
     return q1, median, q3
 
 
-def get_outliers(nums: list[float], quartiles: tuple[float, float, float]) -> list[float]:
+def separate_outliers(nums: list[float], quartiles: tuple[float, float, float]) -> list[float]:
     outliers = []
 
     iqr = quartiles[2] - quartiles[0]
     boundary = quartiles[0] - 1.5 * iqr, quartiles[2] + 1.5 * iqr
 
-    for n in nums:
+    for n in list(nums):
         if n <= boundary[0] or n >= boundary[1]:
             outliers.append(n)
+            nums.remove(n)
 
     return outliers
 
@@ -72,15 +73,16 @@ def main() -> None:
         q1, median, q3 = get_quartiles(nums)
 
         print(f"\nSorted Input: {nums}")
-        print(f"Quartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
+        print(f"\nQuartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
         print(f"1.5 * IQR Boundaries: {q1 - 1.5 * (q3 - q1):.2f}, {q3 + 1.5 * (q3 - q1):.2f}")
-        print(f"IQR Outliers: {get_outliers(nums, (q1, median, q3))}")
+        print(f"IQR Outliers: {separate_outliers(nums, (q1, median, q3))}")
 
+        print(f"Filtered Input: {nums}")
         m = get_mean(nums)
         mad = get_mean_absolute_deviation(nums, m)
-        print(f"Mean and MAD are: {m:.4f} +/- {mad:.6f}")
+        print(f"\nMean and MAD are: {m:.4f} +/- {mad:.6f}")
 
-        raw = input("\nEnter a list of numbers: ")
+        raw = input("\nEnter data: ")
 
 
 if __name__ == "__main__":
