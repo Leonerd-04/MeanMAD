@@ -2,7 +2,7 @@
 
 
 # This function assumes the list has been sorted
-def quartiles(nums: list[float]) -> tuple[float, float, float]:
+def get_quartiles(nums: list[float]) -> tuple[float, float, float]:
     if len(nums) % 2 == 1:
         median = nums[(len(nums) - 1) // 2]
         half, second_half = (len(nums) - 1) // 2, (len(nums) + 1) // 2
@@ -20,7 +20,7 @@ def quartiles(nums: list[float]) -> tuple[float, float, float]:
     return q1, median, q3
 
 
-def outliers(nums: list[float], quartiles: tuple[float, float, float]) -> list[float]:
+def get_outliers(nums: list[float], quartiles: tuple[float, float, float]) -> list[float]:
     outliers = []
 
     iqr = quartiles[2] - quartiles[0]
@@ -33,7 +33,7 @@ def outliers(nums: list[float], quartiles: tuple[float, float, float]) -> list[f
     return outliers
 
 
-def mean(nums: list[float]) -> float:
+def get_mean(nums: list[float]) -> float:
     sum = 0
 
     for i in nums:
@@ -42,7 +42,7 @@ def mean(nums: list[float]) -> float:
     return sum / len(nums)
 
 
-def mean_absolute_deviation(nums: list[float], mean: float) -> float:
+def get_mean_absolute_deviation(nums: list[float], mean: float) -> float:
     sum = 0
 
     for i in nums:
@@ -51,34 +51,34 @@ def mean_absolute_deviation(nums: list[float], mean: float) -> float:
     return sum / len(nums)
 
 
-def parse_num(string: str) -> list[float]:
-    nums = []
+def parse_data(string: str) -> list[float]:
+    data = []
     number_strings = string.split(' ')
 
     for n in number_strings:
         try:
-            nums.append(float(n))
+            data.append(float(n))
         except ValueError:
             print(f"Value \"{n}\" can't be parsed.")
-    return nums
+    return data
 
 
 def main() -> None:
     raw = input("Enter a list of numbers: ")
 
     while raw != "x":
-        nums = parse_num(raw)
+        nums = parse_data(raw)
         nums.sort()
-        q1, median, q3 = quartiles(nums)
+        q1, median, q3 = get_quartiles(nums)
 
-        print(f"\nResults: {nums}")
+        print(f"\nSorted Input: {nums}")
         print(f"Quartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
         print(f"1.5 * IQR Boundaries: {q1 - 1.5 * (q3 - q1):.2f}, {q3 + 1.5 * (q3 - q1):.2f}")
-        print(f"IQR Outliers: {outliers(nums, (q1, median, q3))}")
+        print(f"IQR Outliers: {get_outliers(nums, (q1, median, q3))}")
 
-        m = mean(nums)
-        mad = mean_absolute_deviation(nums, m)
-        print(f"Mean and MAD of results are: {m:.4f} +/- {mad:.6f}")
+        m = get_mean(nums)
+        mad = get_mean_absolute_deviation(nums, m)
+        print(f"Mean and MAD are: {m:.4f} +/- {mad:.6f}")
 
         raw = input("\nEnter a list of numbers: ")
 
