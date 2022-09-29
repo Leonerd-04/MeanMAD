@@ -65,7 +65,7 @@ def parse_data(string: str) -> list[float]:
 
 
 def main() -> None:
-    raw = input("Enter a list of numbers: ")
+    raw = input("Enter data: ")
 
     while raw != "x":
         nums = parse_data(raw)
@@ -80,9 +80,9 @@ def main() -> None:
         print(f"Filtered Input: {nums}")
         m = get_mean(nums)
         mad = get_mean_absolute_deviation(nums, m)
-        print(f"\nMean and MAD are: {m:.4f} +/- {mad:.6f}")
+        print(f"\nMean and MAD are: {m:.4f} ± {mad:.6f}")
 
-        raw = input("\nEnter data: ")
+        raw = input("\nEnter data (\"x\" to quit): ")
 
 
 if __name__ == "__main__":
