@@ -36,6 +36,9 @@ def separate_outliers(nums: list[float], quartiles: tuple[float, float, float]) 
 
 
 def get_mean(nums: list[float]) -> float:
+    if len(nums) == 0:
+        return 0
+
     sum = 0
 
     for i in nums:
@@ -45,6 +48,9 @@ def get_mean(nums: list[float]) -> float:
 
 
 def get_mean_absolute_deviation(nums: list[float], mean: float) -> float:
+    if len(nums) == 0:
+        return 0
+
     sum = 0
 
     for i in nums:
