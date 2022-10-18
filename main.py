@@ -1,4 +1,5 @@
 # Tool for finding the mean and mean absolute deviation of a data set
+from typing import Callable
 
 
 # This function assumes the list has been sorted
@@ -27,7 +28,7 @@ def separate_outliers(nums: list[float], quartiles: tuple[float, float, float]) 
     boundary = quartiles[0] - 1.5 * iqr, quartiles[2] + 1.5 * iqr
 
     for n in list(nums):
-        if n <= boundary[0] or n >= boundary[1]:
+        if n < boundary[0] or n > boundary[1]:
             outliers.append(n)
             nums.remove(n)
 
@@ -35,6 +36,7 @@ def separate_outliers(nums: list[float], quartiles: tuple[float, float, float]) 
 
 
 def get_mean(nums: list[float]) -> float:
+    print(nums)
     sum = 0
 
     for i in nums:
@@ -52,11 +54,10 @@ def get_mean_absolute_deviation(nums: list[float], mean: float) -> float:
     return sum / len(nums)
 
 
-def parse_data(string: str) -> list[float]:
+def parse_data(split: list[str]) -> list[float]:
     data = []
-    number_strings = string.split(' ')
 
-    for n in number_strings:
+    for n in split:
         try:
             data.append(float(n))
         except ValueError:
@@ -64,25 +65,43 @@ def parse_data(string: str) -> list[float]:
     return data
 
 
+def eval_mean_mad(data: list[float]) -> None:
+    data.sort()
+    q1, median, q3 = get_quartiles(data)
+
+    print(f"\nSorted Input: {data}")
+    print(f"\nQuartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
+    print(f"1.5 * IQR Boundaries: {q1 - 1.5 * (q3 - q1):.2f}, {q3 + 1.5 * (q3 - q1):.2f}")
+    print(f"IQR Outliers: {separate_outliers(data, (q1, median, q3))}")
+
+    print(f"Filtered Input: {data}")
+    m = get_mean(data)
+    mad = get_mean_absolute_deviation(data, m)
+    print(f"\nMean and MAD are: {m:.4f} ± {mad:.6f}")
+
+
+def parse_command(raw: str, commands: dict[str, Callable]) -> Callable:
+    command = raw.split(' ')[0]
+    for key, func in commands.items():
+        if raw == key:
+            return func
+
+    # Default command is to parse data
+    return lambda data: data.extend(parse_data(raw.split(' ')))
+
+
 def main() -> None:
-    raw = input("Enter data: ")
+    nums = []
+    commands = {
+        "eval": lambda data: eval_mean_mad(data),
+        "clear": lambda data: data.clear()
+    }
+
+    raw = input("Enter a command or raw data: ")
 
     while raw != "x":
-        nums = parse_data(raw)
-        nums.sort()
-        q1, median, q3 = get_quartiles(nums)
-
-        print(f"\nSorted Input: {nums}")
-        print(f"\nQuartiles: {q1:.2f}, {median:.2f}, {q3:.2f}")
-        print(f"1.5 * IQR Boundaries: {q1 - 1.5 * (q3 - q1):.2f}, {q3 + 1.5 * (q3 - q1):.2f}")
-        print(f"IQR Outliers: {separate_outliers(nums, (q1, median, q3))}")
-
-        print(f"Filtered Input: {nums}")
-        m = get_mean(nums)
-        mad = get_mean_absolute_deviation(nums, m)
-        print(f"\nMean and MAD are: {m:.4f} ± {mad:.6f}")
-
-        raw = input("\nEnter data (\"x\" to quit): ")
+        parse_command(raw, commands)(nums)
+        raw = input("\nEnter data or a command (\"x\" to quit): ")
 
 
 if __name__ == "__main__":
