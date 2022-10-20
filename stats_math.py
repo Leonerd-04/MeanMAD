@@ -1,3 +1,14 @@
+def parse_data(split: list[str]) -> list[float]:
+    data = []
+
+    for n in split:
+        try:
+            data.append(float(n))
+        except ValueError:
+            print(f"Value \"{n}\" can't be parsed.")
+    return data
+
+
 # This function assumes the list has been sorted
 def get_quartiles(nums: list[float]) -> tuple[float, float, float]:
     if len(nums) % 2 == 1:
@@ -56,7 +67,12 @@ def get_mean_absolute_deviation(nums: list[float], mean: float) -> float:
 
 
 # Prints the data evaluation to the console
-def eval_mean_mad(data: list[float]) -> None:
+def eval_mean_mad(saved: list[float], inputted: list[str]) -> None:
+    if len(inputted) > 0:
+        data = parse_data(inputted)
+    else:
+        data = saved
+
     data.sort()
     q1, median, q3 = get_quartiles(data)
 
